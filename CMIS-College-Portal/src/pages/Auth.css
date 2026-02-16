@@ -1,0 +1,87 @@
+/* ===== Full Page Background ===== */
+.auth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4e73df, #1cc88a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* ===== Card ===== */
+.auth-card {
+  background: white;
+  padding: 40px;
+  width: 380px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-3px);
+}
+
+/* ===== Title ===== */
+.auth-card h2 {
+  margin-bottom: 25px;
+  color: #4e73df;
+  font-weight: bold;
+}
+
+/* ===== Inputs ===== */
+.auth-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.auth-card input:focus {
+  outline: none;
+  border-color: #4e73df;
+  box-shadow: 0 0 5px rgba(78, 115, 223, 0.4);
+}
+
+/* ===== Button ===== */
+.auth-card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.auth-card button:hover {
+  background: linear-gradient(135deg, #224abe, #1cc88a);
+}
+
+/* ===== Switch Text ===== */
+.switch-text {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #4e73df;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.switch-text:hover {
+  text-decoration: underline;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 450px) {
+  .auth-card {
+    width: 90%;
+    padding: 30px;
+  }
+}
