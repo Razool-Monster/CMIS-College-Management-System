@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
-import "./Dashboard.css";
+import "./Mark.css";
 
-function Fees() {
+function Marks() {
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
-  const [fees, setFees] = useState([]);
+  const [marks, setMarks] = useState([]);
   const [studentEmail, setStudentEmail] = useState("");
-  const [amount, setAmount] = useState("");
-  const [status, setStatus] = useState("");
+  const [subject, setSubject] = useState("");
+  const [score, setScore] = useState("");
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -18,24 +18,30 @@ function Fees() {
       return;
     }
 
-    API.get("/fees")
-      .then((res) => setFees(res.data))
+    API.get("/marks")
+      .then((res) => setMarks(res.data))
       .catch(() => navigate("/", { replace: true }));
 
   }, [navigate]);
 
-  const handleAddFee = () => {
-    if (!studentEmail || !amount || !status) return;
+  const handleAddMark = () => {
+    if (!studentEmail || !subject || !score) return;
 
-    API.post("/fees", {
+    API.post("/marks", {
       studentEmail,
-      amount,
-      status,
+      subject,
+      score,
     }).then(() => {
       setStudentEmail("");
-      setAmount("");
-      setStatus("");
-      API.get("/fees").then((res) => setFees(res.data));
+      setSubject("");
+      setScore("");
+      API.get("/marks").then((res) => setMarks(res.data));
+    });
+  };
+
+  const handleDelete = (id) => {
+    API.delete(`/marks/${id}`).then(() => {
+      setMarks(marks.filter((m) => m.id !== id));
     });
   };
 
@@ -65,12 +71,12 @@ function Fees() {
       {/* Main */}
       <div className="main">
         <div className="header">
-          <h2>Fees Management</h2>
+          <h2>Marks Management</h2>
         </div>
 
-        {role === "ADMIN" && (
+        {(role === "ADMIN" || role === "FACULTY") && (
           <div className="table-card">
-            <h3>Add Fee</h3>
+            <h3>Add Mark</h3>
 
             <input
               type="text"
@@ -80,35 +86,43 @@ function Fees() {
             />
 
             <input
-              type="number"
-              placeholder="Amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              type="text"
+              placeholder="Subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
             />
 
             <input
-              type="text"
-              placeholder="Status (PAID / PENDING)"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              type="number"
+              placeholder="Score"
+              value={score}
+              onChange={(e) => setScore(e.target.value)}
             />
 
-            <button onClick={handleAddFee}>Add</button>
+            <button onClick={handleAddMark}>Add</button>
           </div>
         )}
 
         <div className="table-card">
           <div className="table-header">
-            <span>Student</span>
-            <span>Amount</span>
-            <span>Status</span>
+            {role !== "STUDENT" && <span>Student</span>}
+            <span>Subject</span>
+            <span>Score</span>
+            {role === "ADMIN" && <span>Action</span>}
           </div>
 
-          {fees.map((f) => (
-            <div key={f.id} className="table-row">
-              <span>{f.studentName}</span>
-              <span>₹ {f.amount}</span>
-              <span>{f.status}</span>
+          {marks.map((m) => (
+            <div key={m.id} className="table-row">
+              {role !== "STUDENT" && <span>{m.studentName}</span>}
+              <span>{m.subject}</span>
+              <span>{m.score}</span>
+              {role === "ADMIN" && (
+                <span>
+                  <button onClick={() => handleDelete(m.id)}>
+                    Delete
+                  </button>
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -118,4 +132,4 @@ function Fees() {
   );
 }
 
-export default Fees;
+export default Marks;

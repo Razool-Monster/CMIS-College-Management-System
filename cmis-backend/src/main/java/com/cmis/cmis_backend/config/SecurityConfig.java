@@ -22,33 +22,40 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> {})
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authorizeHttpRequests(auth -> auth
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> {
+                })
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
 
-                .requestMatchers(HttpMethod.GET, "/api/marks/**")
-                    .hasAnyRole("ADMIN", "FACULTY", "STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/marks/**")
+                        .hasAnyRole("ADMIN", "FACULTY", "STUDENT")
 
-                .requestMatchers(HttpMethod.POST, "/api/marks/**")
-                    .hasAnyRole("ADMIN", "FACULTY")
+                        .requestMatchers(HttpMethod.POST, "/api/marks/**")
+                        .hasAnyRole("ADMIN", "FACULTY")
 
-                .requestMatchers(HttpMethod.DELETE, "/api/marks/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/marks/**")
+                        .hasRole("ADMIN")
 
-                .requestMatchers(HttpMethod.GET, "/api/fees/**")
-                    .hasAnyRole("ADMIN", "STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/fees/**")
+                        .hasAnyRole("ADMIN", "STUDENT")
 
-                .requestMatchers(HttpMethod.POST, "/api/fees/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/fees/**")
+                        .hasRole("ADMIN")
 
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers(HttpMethod.GET, "/api/courses/**")
+                        .hasAnyRole("ADMIN", "FACULTY", "STUDENT")
+
+                        .requestMatchers(HttpMethod.POST, "/api/courses/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/courses/**")
+                        .hasRole("ADMIN")
+
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
